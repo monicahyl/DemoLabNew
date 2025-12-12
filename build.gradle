@@ -1,0 +1,48 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.17'   // Spring Boot 2.x 版本
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'java'
+}
+
+group = 'DemoLabNew'
+version = '1.0.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public' } // 使用阿里云加速
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'  // Web 依赖
+    implementation 'org.projectlombok:lombok:1.18.30' // Lombok
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+
+    // https://mvnrepository.com/artifact/cn.hutool/hutool-core
+    implementation 'cn.hutool:hutool-all:5.8.37'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
+
+    // https://mvnrepository.com/artifact/org.springframework.amqp/spring-rabbit
+//    implementation 'org.springframework.amqp:spring-rabbit:2.1.2.RELEASE'
+
+    // https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+    implementation("org.apache.poi:poi-ooxml:5.4.1")
+
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation("com.google.guava:guava:33.4.8-jre")
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
