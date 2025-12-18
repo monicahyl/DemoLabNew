@@ -1,21 +1,20 @@
-package com.core.training.thread;
+package com.core.training.thread.synchronizeddemo;
 
 /**
  * @Author huangyulu
  * @Date 2025/12/13 16:12
  * @Description
  */
-public class CounterMain {
+public class CounterSyncMain {
+
 
     public static void main(String[] args) throws InterruptedException {
-        Counter counter = new Counter();
+        CounterSync counter = new CounterSync();
 
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                for (int i = 0; i < 1000; i++) {
-                    counter.increment();
-                }
+                counter.increment();
             }
         };
 
@@ -30,28 +29,32 @@ public class CounterMain {
         System.out.println(counter.getCount());
 
 
-
-
     }
+
+
 }
 
 
-class Counter {
+
+
+class CounterSync {
     private int count = 0;
 
- /*   public synchronized void increment() {
-        count++;
+    private final Object lock = new Object();
+
+    // 1.synchronized 修饰代码块
+    public void increment() {
+        synchronized (lock) {
+            System.out.println(Thread.currentThread().getName() + " start ");
+            for (int i = 0; i < 10000; i++) {
+                count++;
+            }
+            System.out.println(Thread.currentThread().getName() + " end ");
+        }
     }
 
     public synchronized int getCount() {
         return count;
-    }*/
-
-    public int getCount() {
-        return count;
     }
 
-    public void increment() {
-        count++;
-    }
 }
