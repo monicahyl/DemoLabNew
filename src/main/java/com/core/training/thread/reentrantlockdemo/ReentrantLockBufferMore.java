@@ -2,35 +2,42 @@ package com.core.training.thread.reentrantlockdemo;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @Author huangyulu
- * @Date 2025/12/27 15:43
- * @Description 实现单缓冲区，生产者/消费者
+ * @Date 2025/12/27 16:27
+ * @Description
  */
 @Slf4j
-public class ReentrantLockBuffer {
+public class ReentrantLockBufferMore {
 
-    private int value;
-
-    private boolean hasData = false;
-
+    private List<Integer> list = new ArrayList(3);
     private final ReentrantLock lock = new ReentrantLock();
-    private final Condition notEmpty = lock.newCondition(); // 这样是有问题的，一个Condition，会导致生产者消费者都会被唤醒
+    private final Condition notEmpty = lock.newCondition(); // 队列非空可消费
+    private final Condition notFull = lock.newCondition(); // 队列未满可生产
 
+
+    /**
+     * 生产者三个条件：
+     * 队列空，生产
+     * 队列满，如何处理？抛弃？阻塞？
+     *
+     * @param data
+     */
     public void produce(int data) {
         try {
             lock.lock();
             log.info("produce lock");
-            while (hasData) {
+            while (list.size() == 3) {
                 log.info("produce await");
-                notEmpty.await();
+                notFull.await();
             }
-
-            value = data;
-            hasData = true;
+            list.add(data);
             log.info("{} Produced data: {}", Thread.currentThread().getName(), data);
             notEmpty.signalAll();
         } catch (InterruptedException e) {
@@ -44,16 +51,16 @@ public class ReentrantLockBuffer {
         try {
             lock.lock();
             log.info("consume lock");
-            while (!hasData) {
+            while (list.isEmpty()) {
                 log.info("consume await");
-                notEmpty.await();
+//                notEmpty.await();
+                notEmpty.await(1, TimeUnit.MILLISECONDS);
             }
+            Integer remove = list.remove(list.size() - 1);
+            log.info("{} consumed data={}", Thread.currentThread().getName(), remove);
 
-            int oldValue = value;
-            value = 0;
-            hasData = false;
-            log.info("{} consumed", Thread.currentThread().getName());
-            notEmpty.signalAll();
+
+            notFull.signalAll();
         } catch (InterruptedException e) {
             log.error("{} consume InterruptedException", Thread.currentThread().getName(), e.getMessage(), e);
         } finally {
