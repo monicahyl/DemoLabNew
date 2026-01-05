@@ -34,6 +34,7 @@ public class ReentrantLockBaseTests {
         t1.start();
         t2.start();
 
+        // lock(),不响应中断
         t2.interrupt();
 
         t1.join();
@@ -60,7 +61,7 @@ public class ReentrantLockBaseTests {
 
         t1.start();
         t2.start();
-
+        // lockInterruptibly()，响应中断
         t2.interrupt();
 
         t1.join();
