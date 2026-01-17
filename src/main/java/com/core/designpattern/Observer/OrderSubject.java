@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * @Author huangyulu
  * @Date 2026/1/16 16:12
- * @Description
+ * @Description 同步阻塞实现方式
  */
 public class OrderSubject implements Subject {
 

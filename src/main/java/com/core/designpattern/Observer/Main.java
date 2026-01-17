@@ -15,6 +15,9 @@ public class Main {
         StockObsever stockObsever = new StockObsever();
         orderSubject.registerObserver(stockObsever);
 
-        orderSubject.pay();
+        orderSubject.pay(); // 阻塞的
+
+        // other method must be blocked
+
     }
 }
